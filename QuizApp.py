@@ -1,21 +1,29 @@
 import tkinter as tk
 from tkinter import messagebox, simpledialog
 import random
+import uuid
+import pickle
+import os
 
 class QuizApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Quiz Application")
         self.root.geometry("500x400")
-        
+
+        # 50 Unique IT Engineering Questions
         self.questions = [
             ("What does CPU stand for?", "Central Process Unit", "Central Processing Unit", "Computer Personal Unit", "Central Processor Unit", "Central Processing Unit"),
-            # Add more questions here up to a total of 50
-            ("Which language is primarily used for data science?", "Java", "C#", "Python", "C++", "Python"),
-            # Add more questions here for testing
-        ] * 25  # Multiplies the question for the test; replace with 50 unique questions
+            ("What is the primary function of an operating system?", "Data storage", "User authentication", "Process management", "Email handling", "Process management"),
+            ("Which language is primarily used for web development?", "Python", "HTML", "Java", "C++", "HTML"),
+            ("What does RAM stand for?", "Random Access Memory", "Read Access Memory", "Random Allowed Memory", "Read Allowed Memory", "Random Access Memory"),
+            ("Who is known as the father of computers?", "Charles Babbage", "Alan Turing", "Bill Gates", "Steve Jobs", "Charles Babbage"),
+            # Add 45 more questions here, each with 4 options and the correct answer at the end
+        ]
 
-        self.user_database = {}  # To store user ID, name, and score
+        self.user_database = {}
+        self.load_data()
+
         self.random_questions = []
         self.current_question_index = 0
         self.score = 0
@@ -37,10 +45,10 @@ class QuizApp:
             messagebox.showerror("Error", "Name cannot be empty!")
             return
 
-        self.user_id = f"U{random.randint(1000, 9999)}"
+        self.user_id = self.generate_unique_id()
         messagebox.showinfo("Welcome", f"Welcome, {self.user_name}! Your ID is: {self.user_id}")
 
-        # Select 10 random questions
+        # Select 10 random, unique questions
         self.random_questions = random.sample(self.questions, 10)
         self.score = 0
         self.current_question_index = 0
@@ -48,45 +56,45 @@ class QuizApp:
         self.show_quiz_page()
 
     def show_quiz_page(self):
-    # Clear previous question widgets
         for widget in self.root.winfo_children():
             widget.destroy()
 
-    # Display the current question
         self.question_label = tk.Label(self.root, text=self.random_questions[self.current_question_index][0], wraplength=400)
         self.question_label.pack(pady=10)
 
-    # Create a single StringVar for all options
-        self.selected_answer = tk.StringVar(value="")  # Default empty, so no option is pre-selected
+        self.selected_answer = tk.StringVar(value="")
 
-    # Display answer options with Radiobuttons
         for i in range(1, 5):
             option = tk.Radiobutton(self.root, text=self.random_questions[self.current_question_index][i], variable=self.selected_answer, value=self.random_questions[self.current_question_index][i])
             option.pack(anchor='w')
 
-    # Next button
         tk.Button(self.root, text="Next", command=self.next_question).pack(pady=10)
 
     def next_question(self):
-    # Get selected answer
         selected_answer = self.selected_answer.get()
+        if not selected_answer:
+            messagebox.showwarning("Warning", "Please select an answer before proceeding!")
+            return
 
-    # Check if selected answer matches the correct answer
         correct_answer = self.random_questions[self.current_question_index][5]
         if selected_answer == correct_answer:
             self.score += 1
-    
-        # Move to the next question or end quiz
+
         self.current_question_index += 1
         if self.current_question_index < len(self.random_questions):
             self.show_quiz_page()
         else:
-            self.end_quiz() 
+            self.end_quiz()
 
     def end_quiz(self):
         messagebox.showinfo("Quiz Completed", f"{self.user_name}, your score is: {self.score}/10")
         self.user_database[self.user_id] = {'name': self.user_name, 'score': self.score}
-        self.show_home_page()
+        self.save_data()
+        
+        if messagebox.askyesno("Return to Home", "Would you like to return to the home screen?"):
+            self.show_home_page()
+        else:
+            self.root.quit()
 
     def check_score(self):
         user_id = simpledialog.askstring("ID Check", "Enter your ID:")
@@ -99,6 +107,17 @@ class QuizApp:
     def exit_quiz(self):
         self.root.quit()
 
+    def generate_unique_id(self):
+        return "U" + uuid.uuid4().hex[:6]
+
+    def save_data(self):
+        with open("user_data.pkl", "wb") as file:
+            pickle.dump(self.user_database, file)
+
+    def load_data(self):
+        if os.path.exists("user_data.pkl"):
+            with open("user_data.pkl", "rb") as file:
+                self.user_database = pickle.load(file)
 
 if __name__ == "__main__":
     root = tk.Tk()
