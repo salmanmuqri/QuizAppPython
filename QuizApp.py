@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox, simpledialog
 import random
-import uuid
 import pickle
 import os
+import json
 
 class QuizApp:
     def __init__(self, root):
@@ -11,15 +11,8 @@ class QuizApp:
         self.root.title("Quiz Application")
         self.root.geometry("500x400")
 
-        # 50 Unique IT Engineering Questions
-        self.questions = [
-            ("What does CPU stand for?", "Central Process Unit", "Central Processing Unit", "Computer Personal Unit", "Central Processor Unit", "Central Processing Unit"),
-            ("What is the primary function of an operating system?", "Data storage", "User authentication", "Process management", "Email handling", "Process management"),
-            ("Which language is primarily used for web development?", "Python", "HTML", "Java", "C++", "HTML"),
-            ("What does RAM stand for?", "Random Access Memory", "Read Access Memory", "Random Allowed Memory", "Read Allowed Memory", "Random Access Memory"),
-            ("Who is known as the father of computers?", "Charles Babbage", "Alan Turing", "Bill Gates", "Steve Jobs", "Charles Babbage"),
-            # Add 45 more questions here, each with 4 options and the correct answer at the end
-        ]
+        # Load questions from JSON file
+        self.questions = self.load_questions()
 
         self.user_database = {}
         self.load_data()
@@ -45,7 +38,7 @@ class QuizApp:
             messagebox.showerror("Error", "Name cannot be empty!")
             return
 
-        self.user_id = self.generate_unique_id()
+        self.user_id = self.generate_unique_numeric_id()
         messagebox.showinfo("Welcome", f"Welcome, {self.user_name}! Your ID is: {self.user_id}")
 
         # Select 10 random, unique questions
@@ -59,14 +52,15 @@ class QuizApp:
         for widget in self.root.winfo_children():
             widget.destroy()
 
-        self.question_label = tk.Label(self.root, text=self.random_questions[self.current_question_index][0], wraplength=400)
+        question_data = self.random_questions[self.current_question_index]
+        self.question_label = tk.Label(self.root, text=question_data["question"], wraplength=400)
         self.question_label.pack(pady=10)
 
         self.selected_answer = tk.StringVar(value="")
 
-        for i in range(1, 5):
-            option = tk.Radiobutton(self.root, text=self.random_questions[self.current_question_index][i], variable=self.selected_answer, value=self.random_questions[self.current_question_index][i])
-            option.pack(anchor='w')
+        for option in question_data["options"]:
+            radio = tk.Radiobutton(self.root, text=option, variable=self.selected_answer, value=option)
+            radio.pack(anchor='w')
 
         tk.Button(self.root, text="Next", command=self.next_question).pack(pady=10)
 
@@ -76,7 +70,7 @@ class QuizApp:
             messagebox.showwarning("Warning", "Please select an answer before proceeding!")
             return
 
-        correct_answer = self.random_questions[self.current_question_index][5]
+        correct_answer = self.random_questions[self.current_question_index]["answer"]
         if selected_answer == correct_answer:
             self.score += 1
 
@@ -107,8 +101,12 @@ class QuizApp:
     def exit_quiz(self):
         self.root.quit()
 
-    def generate_unique_id(self):
-        return "U" + uuid.uuid4().hex[:6]
+    def generate_unique_numeric_id(self):
+        return str(random.randint(100000, 999999))  # 6-digit numeric ID
+
+    def load_questions(self):
+        with open("questions.json", "r") as file:
+            return json.load(file)
 
     def save_data(self):
         with open("user_data.pkl", "wb") as file:

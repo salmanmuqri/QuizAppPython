@@ -1,0 +1,53 @@
+[
+    {
+        "question": "What does CPU stand for?",
+        "options": ["Central Process Unit", "Central Processing Unit", "Computer Personal Unit", "Central Processor Unit"],
+        "answer": "Central Processing Unit"
+    },
+    {
+        "question": "What is the primary function of an operating system?",
+        "options": ["Data storage", "User authentication", "Process management", "Email handling"],
+        "answer": "Process management"
+    },
+    {
+        "question": "Which language is primarily used for web development?",
+        "options": ["Python", "HTML", "Java", "C++"],
+        "answer": "HTML"
+    },
+    {
+        "question": "Which language is primarily used for web development?",
+        "options": ["Python", "HTML", "Java", "C++"],
+        "answer": "HTML"
+    },
+    {
+        "question": "What does HTML stand for?",
+        "options": ["Hyper Trainer Marking Language", "Hyper Text Marketing Language", "Hyper Text Markup Language", "Hyper Text Markup Leveler"],
+        "answer": "Hyper Text Markup Language"
+    },
+    {
+        "question": "What does CSS stand for?",
+        "options": ["Computer Style Sheets", "Creative Style Sheets", "Cascading Style Sheets", "Colorful Style Sheets"],
+        "answer": "Cascading Style Sheets"
+    },
+    {
+        "question": "What does SQL stand for?",
+        "options": ["Structured Query Language", "Sequential Query Language", "Structured Question Language", "Sequential Question Language"],
+        "answer": "Structured Query Language"
+    },
+    {
+        "question": "What does XML stand for?",
+        "options": ["eXtensible Markup Language", "eXecutable Multiple Language", "eXTra Multi-Program Language", "eXamine Multiple Language"],
+        "answer": "eXtensible Markup Language"
+    },
+    {
+        "question": "What does JSON stand for?",
+        "options": ["JavaScript Object Notation", "JavaScript Object Network", "JavaScript Object Notion", "JavaScript Object Naming"],
+        "answer": "JavaScript Object Notation"
+    },
+    {
+        "question": "What does AJAX stand for?",
+        "options": ["Asynchronous JavaScript and XML", "Asynchronous JavaScript and XHTML", "Asynchronous JavaScript and XForms", "Asynchronous JavaScript and XLS"],
+        "answer": "Asynchronous JavaScript and XML"
+    }
+    
+]
