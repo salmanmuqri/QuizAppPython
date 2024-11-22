@@ -2,7 +2,10 @@ import tkinter as tk
 from tkinter import messagebox, simpledialog
 import random
 import pickle
+
 import os
+os.environ['TK_SILENCE_DEPRECATION'] = '1'
+import tkinter as tk
 import json
 
 class QuizApp:
